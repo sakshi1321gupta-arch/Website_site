@@ -48,7 +48,7 @@ async function openPlanner() {
     const response = await fetch(`${backendUrl}/tasks`);
 
     if (response.ok) {
-      window.open(backendUrl, "_blank");
+      window.open("planner.html", "_blank");
       return;
     }
   } catch (error) {
