@@ -42,13 +42,13 @@
  <a href="#" class="btn" onclick="openPlanner()">Go to Study Planner</a>
 <script>
 async function openPlanner() {
-  const backendUrl = "https://website-site-1.onrender.com";
+  const backendUrl = "http://localhost:5000";
 
   try {
     const response = await fetch(`${backendUrl}/tasks`);
 
     if (response.ok) {
-      window.open("planner.html", "_blank");
+      window.open(backendUrl, "_blank");
       return;
     }
   } catch (error) {
