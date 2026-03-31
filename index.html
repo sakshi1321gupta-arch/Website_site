@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sakshi Portfolio</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background-color: #f2f2f2;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      margin: 50px auto;
+      width: 300px;
+      border-radius: 10px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      background-color: blue;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+  </style>
+
+</head>
+<body>
+
+<div class="card">
+  <h1>Hi, I'm Sakshi 👋</h1>
+  <p>Student | Learning Web Development</p>
+
+  <h3>Skills</h3>
+  <p>HTML, CSS, JavaScript</p>
+
+  <br>
+
+ <a href="#" class="btn" onclick="openPlanner()">Go to Study Planner</a>
+<script>
+async function openPlanner() {
+  const backendUrl = "http://localhost:5000";
+
+  try {
+    const response = await fetch(`${backendUrl}/tasks`);
+
+    if (response.ok) {
+      window.open(backendUrl, "_blank");
+      return;
+    }
+  } catch (error) {
+    console.log("Backend not available yet, opening local planner.", error);
+  }
+
+  window.open("planner.html", "_blank");
+}
+</script>
+</body>
+</html>

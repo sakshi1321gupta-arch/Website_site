@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Study Planner</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background-color: #f4f6f8;
+    }
+
+    h2 {
+      margin-top: 20px;
+    }
+
+    input {
+      padding: 10px;
+      width: 250px;
+      margin: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    table {
+      width: 60%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .delete-btn {
+      background-color: red;
+      padding: 5px 10px;
+    }
+
+    #status {
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>📚 Study Planner</h2>
+
+<input type="text" id="task" placeholder="Enter study task">
+<button onclick="addTask()">Add</button>
+
+<p id="status"></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Task</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody id="list"></tbody>
+</table>
+
+<script>
+const API_BASE = "http://localhost:5000"; // 🔥 Replace this
+
+function updateStatus(msg) {
+  document.getElementById("status").innerText = msg;
+}
+
+function renderTasks(tasks) {
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  if (!tasks.length) {
+    list.innerHTML = "<tr><td colspan='2'>No tasks yet</td></tr>";
+    return;
+  }
+
+  tasks.forEach(task => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${task.title}</td>
+      <td>
+        <button class="delete-btn" onclick="deleteTask('${task._id}')">Delete</button>
+      </td>
+    `;
+
+    list.appendChild(row);
+  });
+}
+
+async function loadTasks() {
+  try {
+    const res = await fetch(`${API_BASE}/tasks`);
+    const data = await res.json();
+    renderTasks(data);
+    updateStatus("Connected to backend ✅");
+  } catch (err) {
+    updateStatus("❌ Cannot connect to backend");
+    console.error(err);
+  }
+}
+
+async function addTask() {
+  const input = document.getElementById("task");
+  const title = input.value.trim();
+
+  if (!title) {
+    alert("Enter a task");
+    return;
+  }
+
+  try {
+    await fetch(`${API_BASE}/add-task`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ title })
+    });
+
+    input.value = "";
+    loadTasks();
+    updateStatus("Task saved ✅");
+  } catch (err) {
+    updateStatus("❌ Failed to save task");
+    console.error(err);
+  }
+}
+
+async function deleteTask(id) {
+  try {
+    await fetch(`${API_BASE}/delete-task/${id}`, {
+      method: "DELETE"
+    });
+
+    loadTasks();
+    updateStatus("Task deleted ✅");
+  } catch (err) {
+    updateStatus("❌ Failed to delete task");
+    console.error(err);
+  }
+}
+
+document.getElementById("task").addEventListener("keydown", e => {
+  if (e.key === "Enter") addTask();
+});
+
+loadTasks();
+</script>
+
+</body>
+</html>
