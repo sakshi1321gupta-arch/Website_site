@@ -42,20 +42,9 @@
  <a href="#" class="btn" onclick="openPlanner()">Go to Study Planner</a>
 <script>
 async function openPlanner() {
-  const backendUrl = "http://localhost:5000";
-
-  try {
-    const response = await fetch(`${backendUrl}/tasks`);
-
-    if (response.ok) {
-      window.open(backendUrl, "_blank");
-      return;
-    }
-  } catch (error) {
-    console.log("Backend not available yet, opening local planner.", error);
-  }
-
+  // Open planner.html (the actual frontend)
   window.open("planner.html", "_blank");
+}
 }
 </script>
 </body>
